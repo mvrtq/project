@@ -21,7 +21,7 @@ public class Main {
 
         app.start();
 
-        db.close(); // qwojeqwuoegqusadgasjdgasdjlsadsa
+        db.close(); // proverka
     }
 }
 
