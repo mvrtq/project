@@ -18,7 +18,7 @@ public class Main {
 
         MyApplication app = new MyApplication(controller);
 
-        // getpull
+        // getpull!
         app.start();
 
         db.close(); // qwojeqwuoegqusadgasjdgasdjlsadsa
