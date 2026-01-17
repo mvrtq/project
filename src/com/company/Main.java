@@ -20,6 +20,6 @@ public class Main {
 
         app.start();
 
-        db.close();
+        db.close(); // qwojeqwuoegqusadgasjdgasdjlsadsa
     }
 }
