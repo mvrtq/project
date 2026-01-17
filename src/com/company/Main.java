@@ -23,7 +23,7 @@ public class Main {
         db.close(); // qwojeqwuoegqusadgasjdgasdjlsadsa
 
 
-        //  privet dostar!
+        //  privet dostar!!!!
     }
 }
 
