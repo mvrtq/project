@@ -1,6 +1,6 @@
 package com.company;
 
-import com.company.controllers.UserController;
+import com.company.controllers.ClientController;
 import com.company.controllers.interfaces.IUserController;
 import com.company.data.PostgresDB;
 import com.company.data.interfaces.IDB;
@@ -14,14 +14,14 @@ public class Main {
         // And changing DB should not affect to whole code
         IDB db = new PostgresDB("jdbc:postgresql://localhost:5432", "postgres", "0000", "mydatabase");
         IClientRepository repo = new ClientRepository(db);
-        IUserController controller = new UserController(repo);
+        IUserController controller = new ClientController(repo);
 
         MyApplication app = new MyApplication(controller);
 
 
         app.start();
 
-        db.close(); // proverka
+        db.close(); //
     }
 }
 
