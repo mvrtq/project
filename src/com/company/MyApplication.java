@@ -18,7 +18,7 @@ public class MyApplication {
     }
     private void mainMenu() {
         System.out.println();
-        System.out.println("Welcome to Gym Management Application");
+        System.out.println("Welcome to Gym Management Application!");
         System.out.println("Select option:");
         System.out.println("1. Get all clients");
         System.out.println("2. Get client by id");
