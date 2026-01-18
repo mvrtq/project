@@ -10,6 +10,13 @@ public class MembershipController implements IMembershipController {
     }
     @Override
     public String createMembership(String name, int durationMonths, double price) {
+        if (durationMonths <= 0) {
+            return "ERROR: Membership duration must be greater than 0 months!";
+        }
+
+        if (price <= 0) {
+            return "ERROR: Membership price must be greater than 0!";
+        }
         Membership m = new Membership(name, durationMonths, price);
         boolean created = repo.createMembership(m);
         return (created ? "Membership was created!" : "Membership creation was failed!");
