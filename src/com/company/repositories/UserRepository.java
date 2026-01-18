@@ -2,13 +2,13 @@ package com.company.repositories;
 
 import com.company.data.interfaces.IDB;
 import com.company.models.User;
-import com.company.repositories.interfaces.IUserRepository;
+import com.company.repositories.interfaces.IClientRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserRepository implements IUserRepository {
+public class UserRepository implements IClientRepository {
     private final IDB db;  // Dependency Injection
 
     public UserRepository(IDB db) {

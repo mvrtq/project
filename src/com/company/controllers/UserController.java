@@ -2,14 +2,14 @@ package com.company.controllers;
 
 import com.company.models.User;
 import com.company.controllers.interfaces.IUserController;
-import com.company.repositories.interfaces.IUserRepository;
+import com.company.repositories.interfaces.IClientRepository;
 
 import java.util.List;
 
 public class UserController implements IUserController {
-    private final IUserRepository repo;
+    private final IClientRepository repo;
 
-    public UserController(IUserRepository repo) { // Dependency Injection
+    public UserController(IClientRepository repo) { // Dependency Injection
         this.repo = repo;
     }
 
