@@ -1,93 +1,89 @@
 package com.company.repositories;
 
 import com.company.data.interfaces.IDB;
-import com.company.models.User;
+import com.company.models.Client;
 import com.company.repositories.interfaces.IClientRepository;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserRepository implements IClientRepository {
-    private final IDB db;  // Dependency Injection
+public class ClientRepository implements IClientRepository {
+    private final IDB db;
 
-    public UserRepository(IDB db) {
+    public ClientRepository(IDB db) {
         this.db = db;
     }
 
     @Override
-    public boolean createUser(User user) {
+    public boolean createClient(Client client) {
         Connection con = null;
-
         try {
             con = db.getConnection();
-            String sql = "INSERT INTO users(name,surname,gender) VALUES (?,?,?)";
+            String checkSql = "SELECT id FROM clients WHERE phone=?";
+            PreparedStatement checkSt = con.prepareStatement(checkSql);
+            checkSt.setString(1, client.getPhone());
+            ResultSet rsCheck = checkSt.executeQuery();
+            if (rsCheck.next()) {
+                System.out.println("Client with this phone already exists!");
+                return false;
+            }
+            String sql = "INSERT INTO clients(name, surname, phone) VALUES (?,?,?)";
             PreparedStatement st = con.prepareStatement(sql);
-
-            st.setString(1, user.getName());
-            st.setString(2, user.getSurname());
-            st.setBoolean(3, user.getGender());
-
+            st.setString(1, client.getName());
+            st.setString(2, client.getSurname());
+            st.setString(3, client.getPhone());
             st.execute();
-
             return true;
         } catch (SQLException e) {
             System.out.println("sql error: " + e.getMessage());
         }
-
         return false;
     }
 
     @Override
-    public User getUser(int id) {
+    public Client getClient(int id) {
         Connection con = null;
-
         try {
             con = db.getConnection();
-            String sql = "SELECT id,name,surname,gender FROM users WHERE id=?";
+            String sql = "SELECT id, name, surname, phone FROM clients WHERE id=?";
             PreparedStatement st = con.prepareStatement(sql);
-
             st.setInt(1, id);
-
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                return new User(rs.getInt("id"),
+                Client client = new Client(
+                        rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("surname"),
-                        rs.getBoolean("gender"));
+                        rs.getString("phone"));
+                return client;
             }
         } catch (SQLException e) {
             System.out.println("sql error: " + e.getMessage());
         }
-
         return null;
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<Client> getAllClients() {
         Connection con = null;
-
         try {
             con = db.getConnection();
-            String sql = "SELECT id,name,surname,gender FROM users";
+            String sql = "SELECT id, name, surname, phone FROM clients";
             Statement st = con.createStatement();
-
             ResultSet rs = st.executeQuery(sql);
-            List<User> users = new ArrayList<>();
+            List<Client> clients = new ArrayList<>();
             while (rs.next()) {
-                User user = new User(rs.getInt("id"),
+                Client client = new Client(
+                        rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("surname"),
-                        rs.getBoolean("gender"));
-
-                users.add(user);
+                        rs.getString("phone"));
+                clients.add(client);
             }
-
-            return users;
+            return clients;
         } catch (SQLException e) {
             System.out.println("sql error: " + e.getMessage());
         }
-
         return null;
     }
 }
