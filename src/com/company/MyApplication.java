@@ -4,6 +4,7 @@ import com.company.controllers.interfaces.IMembershipController;
 import com.company.controllers.interfaces.ISubscriptionController;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
 public class MyApplication {
     private final Scanner scanner = new Scanner(System.in);
     private final IClientController clientController;
