@@ -55,4 +55,16 @@ public class SubscriptionController implements ISubscriptionController {
         }
         return response.toString();
     }
+    @Override
+    public String checkIn(int clientId) {
+        Client client = clientRepo.getClient(clientId);
+        if (client == null) {
+            return "Access denied: client not found";
+        }
+        boolean hasActiveSubscription = subRepo.clientHasActiveSubscription(clientId);
+        if (!hasActiveSubscription){
+            return "Access denied: no active subscription";
+        }
+        return "Access granted: Welcome to the Gym!";
+    }
 }

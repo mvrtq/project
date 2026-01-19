@@ -2,6 +2,8 @@ package com.company;
 import com.company.controllers.interfaces.IClientController;
 import com.company.controllers.interfaces.IMembershipController;
 import com.company.controllers.interfaces.ISubscriptionController;
+
+import java.sql.SQLOutput;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -29,9 +31,10 @@ public class MyApplication {
         System.out.println("6. Create membership");
         System.out.println("7. Subscribe client to membership");
         System.out.println("8. Show all subscriptions");
+        System.out.println("9. Enter the gym");
         System.out.println("0. Exit");
         System.out.println();
-        System.out.print("Enter option (0-8): ");
+        System.out.print("Enter option (0-9): ");
     }
     public void start() {
         while (true) {
@@ -47,6 +50,7 @@ public class MyApplication {
                     case 6: createMembershipMenu(); break;
                     case 7: subscribeClientMenu(); break;
                     case 8: getAllSubscriptionsMenu(); break;
+                    case 9: getCheckInMenu(); break;
                     case 0: return;
                     default: System.out.println("Invalid option!");
                 }
@@ -109,6 +113,12 @@ public class MyApplication {
     }
     private void getAllSubscriptionsMenu() {
         String response = subscriptionController.getAllSubscriptions();
+        System.out.println(response);
+    }
+    private void getCheckInMenu(){
+        System.out.println("Enter client ID:");
+        int clientId=scanner.nextInt();
+        String response =subscriptionController.checkIn(clientId);
         System.out.println(response);
     }
 }
