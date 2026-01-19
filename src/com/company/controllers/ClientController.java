@@ -10,6 +10,9 @@ public class ClientController implements IClientController {
     }
     @Override
     public String createClient(String name, String surname, String phone) {
+        if (phone.length()!=11){
+            return "ERROR: Phone nubmer must be 11 digits";
+        }
         Client client = new Client(name, surname, phone);
         boolean created = repo.createClient(client);
         return (created ? "Client was created!" : "Client creation was failed!");
