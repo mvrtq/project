@@ -31,4 +31,9 @@ public class ClientController implements IClientController {
         }
         return response.toString();
     }
+
+    @Override
+    public Integer loginClient(String phone) {
+        return repo.getClientIdByPhone(phone);
+    }
 }
