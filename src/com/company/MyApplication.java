@@ -1,28 +1,90 @@
 package com.company;
+import com.company.controllers.interfaces.IAdminController;
 import com.company.controllers.interfaces.IClientController;
 import com.company.controllers.interfaces.IMembershipController;
 import com.company.controllers.interfaces.ISubscriptionController;
 
-import java.sql.SQLOutput;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MyApplication {
     private final Scanner scanner = new Scanner(System.in);
+
+    private final IAdminController adminController;
     private final IClientController clientController;
     private final IMembershipController membershipController;
     private final ISubscriptionController subscriptionController;
-    public MyApplication(IClientController clientController,
+
+    private Integer currentClientId = null;
+
+    public MyApplication(IAdminController adminController,
+                         IClientController clientController,
                          IMembershipController membershipController,
                          ISubscriptionController subscriptionController) {
+        this.adminController = adminController;
         this.clientController = clientController;
         this.membershipController = membershipController;
         this.subscriptionController = subscriptionController;
     }
+
     private void mainMenu() {
         System.out.println();
         System.out.println("Welcome to Gym Management Application!");
-        System.out.println("Select option:");
+        System.out.println("1. Login as ADMIN");
+        System.out.println("2. Enter as CLIENT");
+        System.out.println("0. Exit");
+        System.out.print("Enter option (0-2): ");
+    }
+
+    public void start() {
+        while (true) {
+            mainMenu();
+            try {
+                int option = scanner.nextInt();
+                switch (option) {
+                    case 1:
+                        if (adminLoginMenu()) {
+                            adminFlow();
+                        }
+                        break;
+                    case 2:
+                        clientFlow();
+                        break;
+                    case 0:
+                        return;
+                    default:
+                        System.out.println("Invalid option!");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Input must be an integer!");
+                scanner.nextLine();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            System.out.println("*************************");
+        }
+    }
+
+    private boolean adminLoginMenu(){
+        System.out.println("\n--- ADMIN LOGIN ---");
+        System.out.print("Username:");
+        String username = scanner.next();
+        System.out.print("Password:");
+        String password = scanner.next();
+
+        boolean ok = adminController.login(username, password);
+        if (!ok) {
+            System.out.println("Wrong username / password!");
+        }
+        else {
+            System.out.println("Admin login successful!");
+        }
+        return ok;
+    }
+
+    private void adminMenu() {
+        System.out.println();
+        System.out.println("=== ADMIN MENU ===");
         System.out.println("1. Get all clients");
         System.out.println("2. Get client by id");
         System.out.println("3. Create client");
@@ -32,13 +94,13 @@ public class MyApplication {
         System.out.println("7. Subscribe client to membership");
         System.out.println("8. Show all subscriptions");
         System.out.println("9. Enter the gym");
-        System.out.println("0. Exit");
-        System.out.println();
+        System.out.println("0. Logout");
         System.out.print("Enter option (0-9): ");
     }
-    public void start() {
+
+    private void adminFlow() {
         while (true) {
-            mainMenu();
+            adminMenu();
             try {
                 int option = scanner.nextInt();
                 switch (option) {
@@ -55,14 +117,94 @@ public class MyApplication {
                     default: System.out.println("Invalid option!");
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Input must be an integer: " + e);
-                scanner.nextLine(); // clear invalid input
+                System.out.println("Input must be an integer!");
+                scanner.nextLine();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
             System.out.println("*************************");
         }
     }
+
+    private void clientFlow() {
+        while (true) {
+
+            if (currentClientId == null) {
+                System.out.println();
+                System.out.println("=== CLIENT AUTH ===");
+                System.out.println("1. Register");
+                System.out.println("2. Login by phone");
+                System.out.println("0. Back");
+                System.out.print("Enter option (0-2): ");
+
+                int option = scanner.nextInt();
+
+                switch (option) {
+                    case 1:
+                        createClientMenu();
+                        break;
+                    case 2:
+                        System.out.print("Enter phone: ");
+                        String phone = scanner.next();
+
+                        Integer id = clientController.loginClient(phone);
+                        if (id == null) {
+                            System.out.println("Client not found. Please register first.");
+                        } else {
+                            currentClientId = id;
+                            System.out.println("Logged in! Your client ID: " + currentClientId);
+                        }
+                        break;
+                    case 0:
+                        currentClientId = null;
+                        return;
+                    default:
+                        System.out.println("Invalid option!");
+                }
+
+                System.out.println("*************************");
+                continue;
+            }
+
+            System.out.println();
+            System.out.println("=== CLIENT ACCOUNT ===");
+            System.out.println("1. View all memberships");
+            System.out.println("2. Subscribe to membership");
+            System.out.println("3. Enter the gym");
+            System.out.println("9. Logout");
+            System.out.println("0. Back");
+            System.out.print("Enter option: ");
+
+            int accOption = scanner.nextInt();
+
+            switch (accOption) {
+                case 1:
+                    getAllMembershipsMenu();
+                    break;
+                case 2:
+                    System.out.print("Enter membership ID: ");
+                    int membershipId = scanner.nextInt();
+                    System.out.println(subscriptionController.createSubscription(currentClientId, membershipId));
+                    break;
+                case 3:
+                    System.out.println(subscriptionController.checkIn(currentClientId));
+                    break;
+                case 9:
+                    currentClientId = null;
+                    System.out.println("Logged out.");
+                    break;
+                case 0:
+                    currentClientId = null;
+                    return;
+                default:
+                    System.out.println("Invalid option!");
+            }
+
+            System.out.println("*************************");
+        }
+    }
+
+
     private void getAllClientsMenu() {
         String response = clientController.getAllClients();
         System.out.println(response);

@@ -6,6 +6,9 @@ import com.company.repositories.interfaces.IClientRepository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class ClientRepository implements IClientRepository {
     private final IDB db;
@@ -85,5 +88,20 @@ public class ClientRepository implements IClientRepository {
             System.out.println("sql error: " + e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public Integer getClientIdByPhone(String phone){
+        try (Connection con = db.getConnection()){
+            String sql = "SELECT id FROM clients WHERE phone = ?";
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setString(1, phone);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) return rs.getInt("id");
+            return null;
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 }

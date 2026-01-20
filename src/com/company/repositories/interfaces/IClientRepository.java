@@ -7,4 +7,5 @@ public interface IClientRepository {
     boolean createClient(Client client);
     Client getClient(int id);
     List<Client> getAllClients();
+    Integer getClientIdByPhone(String phone);
 }
