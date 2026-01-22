@@ -180,7 +180,7 @@ public class MyApplication {
             switch (accOption) {
                 case 1:
                     getAllMembershipsMenu();
-                    break;
+                        break;
                 case 2:
                     System.out.print("Enter membership ID: ");
                     int membershipId = scanner.nextInt();
